@@ -3,7 +3,7 @@ const Discord = require('discord.js');
 const client = new Discord.Client();
 
 
-const TOKEN = "NzUxODM0MzEwNDMyMTI5MTAx.X1O2RA.Poh8bvDHyRAQt6AgiEEDddbjO9I";
+const TOKEN = process.env.TOKEN;
 var prefix = "+";
 var muteMembersLength = 0;
 var muteListMembers = [];
@@ -94,12 +94,17 @@ console.log(args);
         }
     
     if (command == 'react') {
+        if (!args[0]) {
+            message.channel.send("Correct usage: 'react [time to vote in seconds]")
+        }
 
         var nameArray = [];
         var reactionAmount = 0;
+        var sentMsg = message.channel.send("Voteing...");
+        var messageID = message.id;
         client.on('messageReactionAdd', (reaction, user) => {
-
             let message = reaction.message, emoji = reaction.emoji;
+            if(message.id == messageID) {
                     // We don't have the member, but only the user...
                     // Thanks to the previous part, we know how to fetch it
                     message.guild.members.fetch(user.id).then(member => {
@@ -107,8 +112,7 @@ console.log(args);
                     });
     
                     reactionAmount++;
-            // Remove the user's reaction
-    });
+    }});
 
     setTimeout(() => {
         var sendText = ""
@@ -116,7 +120,7 @@ console.log(args);
             sendText = sendText + element + "; ";
         });
         message.channel.send(sendText);
-    }, args[0]);
+    }, args[0]*1000);
 
     }
 
