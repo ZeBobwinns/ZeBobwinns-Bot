@@ -6,6 +6,7 @@
         "start": "node ."
     },
     "dependencies": {
-        "discord.js": "^12.4.1"
+        "discord.js": "^12.4.1",
+        "xhr2": "^0.2.0",
     }
 }
