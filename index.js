@@ -3,7 +3,7 @@ const Discord = require('discord.js');
 const client = new Discord.Client();
 
 
-const TOKEN = process.env.TOKEN;
+const TOKEN = "NzUxODM0MzEwNDMyMTI5MTAx.X1O2RA.nW9-DZqkHlzLf5Kg5jpsTOBNci4" //process.env.TOKEN;
 var prefix = "+";
 var muteMembersLength = 0;
 var muteListMembers = [];
@@ -12,6 +12,7 @@ var nonmemlist = [];
 var nonmemactive = 0;
 var pingLoopNum=0;
 var pingTimeout = []
+var XMLHttpRequest = require('xhr2');
 client.on('message', message => {
     if (message.content.charAt(0) == prefix) {
     var args = message.content.slice(prefix.length).trim().split(" ");
@@ -79,6 +80,19 @@ console.log(args);
         
         message.channel.send({ embed: embed });
     }
+
+    if (command == "meme") {
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("GET", "http://www.reddit.com/r/random/random.json?limit=1", true);
+        xhttp.send();
+        xhttp.onload = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            var response = JSON.parse(this.responseText);
+            message.channel.send("https://www.reddit.com"+response[0].data.children[0].data.permalink);
+            console.log("https://www.reddit.com"+response[0].data.children[0].data.permalink);
+          }
+    }
+}
 
     if (command == "timer") {
         var time = args[0];
