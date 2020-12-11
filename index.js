@@ -3,7 +3,7 @@ const Discord = require('discord.js');
 const client = new Discord.Client();
 
 
-const TOKEN = process.env.TOKEN;
+const TOKEN = 'NzUxODM0MzEwNDMyMTI5MTAx.X1O2RA.nW9-DZqkHlzLf5Kg5jpsTOBNci4' //process.env.TOKEN;
 var prefix = "+";
 var muteMembersLength = 0;
 var muteListMembers = [];
@@ -83,15 +83,41 @@ console.log(args);
 
     if (command == "meme") {
         var xhttp = new XMLHttpRequest();
-        xhttp.open("GET", "http://www.reddit.com/r/random/random.json?limit=1", true);
+        xhttp.open("GET", "https://www.reddit.com/r/dankmemes/random.json", true);
         xhttp.send();
         xhttp.onload = function() {
           if (this.readyState == 4 && this.status == 200) {
             var response = JSON.parse(this.responseText);
-            message.channel.send("https://www.reddit.com"+response[0].data.children[0].data.permalink);
-            console.log("https://www.reddit.com"+response[0].data.children[0].data.permalink);
+            message.channel.send(response[0].data.children[0].data.url);
+            console.log(response[0].data.children[0].data.url);
           }
     }
+}
+
+if (command == "post") {
+    var xhttp = new XMLHttpRequest();
+    xhttp.open("GET", "https://www.reddit.com/r/random/random.json", true);
+    xhttp.send();
+    xhttp.onload = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        var response = JSON.parse(this.responseText);
+        message.channel.send("https://www.reddit.com"+response[0].data.children[0].data.permalink);
+        console.log("https://www.reddit.com"+response[0].data.children[0].data.permalink);
+      }
+}
+}
+
+if (command == "sub") {
+    var xhttp = new XMLHttpRequest();
+    xhttp.open("GET", "https://www.reddit.com/r/random/random.json", true);
+    xhttp.send();
+    xhttp.onload = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        var response = JSON.parse(this.responseText);
+        message.channel.send("https://www.reddit.com/"+response[0].data.children[0].data.subreddit_name_prefixed);
+        console.log("https://www.reddit.com/"+response[0].data.children[0].data.subreddit_name_prefixed);
+      }
+}
 }
 
     if (command == "timer") {
