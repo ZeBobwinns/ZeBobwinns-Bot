@@ -90,7 +90,7 @@ console.log(args);
         xhttp.onload = function() {
           if (this.readyState == 4 && this.status == 200) {
             var response = JSON.parse(this.responseText);
-            message.channel.send(response[0].data.children[0].data.url);
+            message.channel.send("Sourced from your local meme store at https://www.reddit.com/r/"+subreddit+"    "+response[0].data.children[0].data.url);
             console.log(response[0].data.children[0].data.url);
           }
     }
