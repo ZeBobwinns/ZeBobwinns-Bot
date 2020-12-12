@@ -12,6 +12,7 @@ var nonmemlist = [];
 var nonmemactive = 0;
 var pingLoopNum=0;
 var pingTimeout = []
+var subs = ["arabfunny", "bikinibottomtwitter", "birdsarentreal", "blackmagicfuckery", "blursedimages", "clevercomebacks", "cringetopia", "cursedcomments", "cursedimages", "dankmemes", "diwhy", "dndmemes", "fuckgravel", "fuckyoukaren", "hadtohurt", "historymemes", "iamverysmart", "insanepeoplefacebook", "madlads", "makemesuffer", "meme", "memes", "nextfuckinglevel", "noahgettheboat", "okbuddyretard", "perfectlycutscreams", "pcmasterrace", "politicalcompassmemes", "redneckengineering", "shutthefuckup", "startrekmemes", "starwarsmemes", "prequelmemes", "dnd", "greentext", "trebuchetmemes", "engrish", "holup", "wtf", "bossfight"];
 var XMLHttpRequest = require('xhr2');
 client.on('message', message => {
     if (message.content.charAt(0) == prefix) {
@@ -83,7 +84,8 @@ console.log(args);
 
     if (command == "meme") {
         var xhttp = new XMLHttpRequest();
-        xhttp.open("GET", "https://www.reddit.com/r/dankmemes/random.json", true);
+        var subreddit = subs[Math.floor(Math.random()*(subs.length-0+1)+0)];
+        xhttp.open("GET", "https://www.reddit.com/r/"+subreddit+"/random.json", true);
         xhttp.send();
         xhttp.onload = function() {
           if (this.readyState == 4 && this.status == 200) {
