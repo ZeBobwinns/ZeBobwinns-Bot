@@ -12,7 +12,7 @@ var nonmemlist = [];
 var nonmemactive = 0;
 var pingLoopNum=0;
 var pingTimeout = []
-var subs = ["arabfunny", "bikinibottomtwitter", "birdsarentreal", "blackmagicfuckery", "blursedimages", "clevercomebacks", "cringetopia", "cursedcomments", "cursedimages", "dankmemes", "diwhy", "dndmemes", "fuckgravel", "fuckyoukaren", "hadtohurt", "historymemes", "iamverysmart", "insanepeoplefacebook", "madlads", "makemesuffer", "meme", "memes", "nextfuckinglevel", "noahgettheboat", "okbuddyretard", "perfectlycutscreams", "pcmasterrace", "politicalcompassmemes", "redneckengineering", "shutthefuckup", "startrekmemes", "starwarsmemes", "prequelmemes", "dnd", "greentext", "trebuchetmemes", "engrish", "holup", "wtf", "bossfight"];
+var subs = ["arabfunny", "bikinibottomtwitter", "birdsarentreal", "blackmagicfuckery", "blursedimages", "clevercomebacks", "cringetopia", "cursedcomments", "cursedimages", "dankmemes", "diwhy", "dndmemes", "fuckgravel", "fuckyoukaren", "hadtohurt", "iamverysmart", "insanepeoplefacebook", "madlads", "makemesuffer", "meme", "memes", "noahgettheboat", "perfectlycutscreams", "pcmasterrace", "politicalcompassmemes", "redneckengineering", "startrekmemes", "starwarsmemes", "prequelmemes", "dnd", "greentext", "trebuchetmemes", "engrish", "holup", "wtf", "bossfight"];
 var XMLHttpRequest = require('xhr2');
 client.on('message', message => {
     if (message.content.charAt(0) == prefix) {
@@ -83,19 +83,51 @@ console.log(args);
     }
 
     if (command == "meme") {
-        var xhttp = new XMLHttpRequest();
-        var subreddit = subs[Math.floor(Math.random()*(subs.length-0+1)+0)];
-        xhttp.open("GET", "https://www.reddit.com/r/"+subreddit+"/random.json", true);
-        xhttp.send();
-        xhttp.onload = function() {
-          if (this.readyState == 4 && this.status == 200) {
-            var response = JSON.parse(this.responseText);
-            message.channel.send("Sourced from your local meme store at https://www.reddit.com/r/"+subreddit+"    "+response[0].data.children[0].data.url);
-            console.log(response[0].data.children[0].data.url);
-          }
-    }
+checkPost()
 }
 
+function checkPost() {
+    var xhttp = new XMLHttpRequest();
+    var subreddit = subs[Math.floor(Math.random()*(subs.length-0+1)+0)];
+    xhttp.open("GET", "https://www.reddit.com/r/"+subreddit+"/random.json", true);
+    xhttp.send();
+    xhttp.onload = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        console.log(subreddit)
+        var response = JSON.parse(this.responseText);
+        if (response[0]) {
+        if (!response[0].data.children[0].data.crosspost_parent_list) {
+            if (response[0].data.children[0].data.is_video == true) {
+                message.channel.send("Post came up with a video, heres the link:   https://www.reddit.com"+ response[0].data.children[0].data.permalink)
+            }else if (response[0].data.children[0].data.over_18 == true) {
+                console.log("Its NSFW, marking spoiler")
+                message.channel.send("Title: "+response[0].data.children[0].data.title+"  Link: https://www.reddit.com"+response[0].data.children[0].data.permalink)
+                message.channel.send({
+                    files: [{
+                       attachment: response[0].data.children[0].data.url,
+                       name: "SPOILER_FILE.jpg"
+                    }]
+                 });
+            }
+            else {
+                message.channel.send("Title: "+response[0].data.children[0].data.title+"  Link: https://www.reddit.com"+response[0].data.children[0].data.permalink)
+                message.channel.send({
+                    files: [{
+                       attachment: response[0].data.children[0].data.url,
+                       name: "FILE.jpg"
+                    }]
+                 });
+            }
+        console.log(response[0].data.children[0].data.url);
+    }else{
+        checkPost()
+    }
+      } else {
+        checkPost()
+      }
+    }
+} 
+}
 if (command == "post") {
     var xhttp = new XMLHttpRequest();
     xhttp.open("GET", "https://www.reddit.com/r/random/random.json", true);
