@@ -14,6 +14,19 @@ var pingLoopNum=0;
 var pingTimeout = []
 var subs = ["arabfunny", "bikinibottomtwitter", "birdsarentreal", "blackmagicfuckery", "blursedimages", "clevercomebacks", "cringetopia", "cursedcomments", "cursedimages", "dankmemes", "diwhy", "dndmemes", "fuckgravel", "fuckyoukaren", "hadtohurt", "iamverysmart", "insanepeoplefacebook", "madlads", "makemesuffer", "meme", "memes", "noahgettheboat", "perfectlycutscreams", "pcmasterrace", "politicalcompassmemes", "redneckengineering", "startrekmemes", "starwarsmemes", "prequelmemes", "dnd", "greentext", "trebuchetmemes", "engrish", "holup", "wtf", "bossfight"];
 var XMLHttpRequest = require('xhr2');
+
+// This is the needed event to use the welcome!
+client.on('guildMemberAdd', async newMember => {
+    // IMPORTANT NOTE: Make Sure To Use async and rename bot to client or whatever name you have for your bot events!
+    const welcomeChannel = newMember.guild.channels.cache.find(channel => channel.name === 'general')
+    welcomeChannel.send({
+        files: [{
+           attachment: "https://cdn.discordapp.com/attachments/785982017389068319/788192917876637716/Another_Fag_joined_the_Chat.mp4",
+           name: "FILE.mp4"
+        }]
+     });
+})
+
 client.on('message', message => {
     if (message.content.charAt(0) == prefix) {
     var args = message.content.slice(prefix.length).trim().split(" ");
@@ -82,6 +95,7 @@ console.log(args);
         message.channel.send({ embed: embed });
     }
 
+    
     if (command == "meme") {
 checkPost()
 }
