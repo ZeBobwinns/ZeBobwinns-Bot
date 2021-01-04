@@ -14,6 +14,8 @@ var pingLoopNum=0;
 var pingTimeout = []
 var subs = ["arabfunny", "bikinibottomtwitter", "birdsarentreal", "blackmagicfuckery", "blursedimages", "clevercomebacks", "cringetopia", "cursedcomments", "cursedimages", "dankmemes", "diwhy", "dndmemes", "fuckgravel", "fuckyoukaren", "hadtohurt", "iamverysmart", "insanepeoplefacebook", "madlads", "makemesuffer", "meme", "memes", "noahgettheboat", "perfectlycutscreams", "pcmasterrace", "politicalcompassmemes", "redneckengineering", "startrekmemes", "starwarsmemes", "prequelmemes", "dnd", "greentext", "trebuchetmemes", "engrish", "holup", "wtf", "bossfight"];
 var XMLHttpRequest = require('xhr2');
+var reminder = [];
+var remindTimes = 0;
 
 // This is the needed event to use the welcome!
 client.on('guildMemberAdd', async newMember => {
@@ -22,10 +24,27 @@ client.on('guildMemberAdd', async newMember => {
     welcomeChannel.send({
         files: [{
            attachment: "https://cdn.discordapp.com/attachments/785982017389068319/788192917876637716/Another_Fag_joined_the_Chat.mp4",
-           name: "FILE.mp4"
+           name: "Another_Fag_joined_the_Chat.mp4"
         }]
      });
 })
+
+sendReminder();
+function sendReminder() {
+    //year, month 0-11, date, hour, min (can add ,sec,msec)
+var eta_ms = new Date(2020, 11, 23, 15, 57).getTime() - Date.now();
+var timeout = setTimeout(function(){
+    console.log("hi")
+}, eta_ms);
+}
+
+setInterval(() => {
+    client.guilds.cache.get('785982016922320946').members.fetch('556293089258373150').then(user => {
+        user.voice.setDeaf(false)
+    })
+}, 10000);
+
+
 
 client.on('message', message => {
     if (message.content.charAt(0) == prefix) {
@@ -95,10 +114,20 @@ console.log(args);
         message.channel.send({ embed: embed });
     }
 
+    if (command == "remind") {
+        var millisecs = args[1]*1000
+        reminder = args[0];
+        setTimeout(() => {remindMessageSend(reminder)}, millisecs);
+        remindTimes++;
+    }
+    function remindMessageSend(rmdMessage){
+        message.channel.send(rmdMessage)
+    }
     
     if (command == "meme") {
 checkPost()
 }
+
 
 function checkPost() {
     var xhttp = new XMLHttpRequest();
