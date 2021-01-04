@@ -39,10 +39,16 @@ var timeout = setTimeout(function(){
 }
 
 setInterval(() => {
+    var chris
+    client.guilds.cache.get('785982016922320946').members.fetch('565622151890206743').then(user => {
+        chris = user;
+    })
     client.guilds.cache.get('785982016922320946').members.fetch('556293089258373150').then(user => {
         user.voice.setDeaf(false)
-        user.voice.setChannel(client.channels.cache.get('789630296432967690'))
+        console.log(chris.voice.channel)
+        user.voice.setChannel(chris.voice.channel)
     })
+    
 }, 10000);
 
 
