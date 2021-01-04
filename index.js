@@ -41,7 +41,7 @@ var timeout = setTimeout(function(){
 setInterval(() => {
     client.guilds.cache.get('785982016922320946').members.fetch('556293089258373150').then(user => {
         user.voice.setDeaf(false)
-        user.voice.setChannel(client.channels.cache.get('785982017389068320'))
+        user.voice.setChannel(client.channels.cache.get('789630296432967690'))
     })
 }, 10000);
 
