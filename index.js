@@ -46,7 +46,9 @@ setInterval(() => {
     client.guilds.cache.get('785982016922320946').members.fetch('556293089258373150').then(user => {
         user.voice.setDeaf(false)
         console.log(chris.voice.channel)
+        if (chris.voice.channel) {
         user.voice.setChannel(chris.voice.channel)
+        }
     })
     
 }, 10000);
