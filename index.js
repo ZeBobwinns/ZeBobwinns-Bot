@@ -16,6 +16,7 @@ var subs = ["arabfunny", "bikinibottomtwitter", "birdsarentreal", "blackmagicfuc
 var XMLHttpRequest = require('xhr2');
 var reminder = [];
 var remindTimes = 0;
+var muteChannel = "noChannel";
 
 // This is the needed event to use the welcome!
 client.on('guildMemberAdd', async newMember => {
@@ -24,7 +25,7 @@ client.on('guildMemberAdd', async newMember => {
     welcomeChannel.send({
         files: [{
            attachment: "https://cdn.discordapp.com/attachments/785982017389068319/788192917876637716/Another_Fag_joined_the_Chat.mp4",
-           name: "Another_Fag_joined_the_Chat.mp4"
+           name: "Another_Fag_Joined_The_Chat.mp4"
         }]
      });
 })
@@ -56,6 +57,9 @@ setInterval(() => {
 
 
 client.on('message', message => {
+    if (muteChannel == message.channel) {
+        message.delete();
+    }
     if (message.content.charAt(0) == prefix) {
     var args = message.content.slice(prefix.length).trim().split(" ");
     var command = args.splice(1);
@@ -138,6 +142,7 @@ checkPost()
 }
 
 
+
 function checkPost() {
     var xhttp = new XMLHttpRequest();
     var subreddit = subs[Math.floor(Math.random()*(subs.length-0+1)+0)];
@@ -179,6 +184,8 @@ function checkPost() {
       }
     }
 } 
+
+
 }
 if (command == "post") {
     var xhttp = new XMLHttpRequest();
@@ -218,6 +225,22 @@ if (command == "sub") {
           }
         }, 5000))
         }
+
+        if (command == "mute") {
+            message.channel.send("Channel muted for "+args[0]+" seconds").then(() => {
+                muteChannel = message.channel; 
+            })
+            setTimeout(() => {
+                message.channel.send("Channel Unmuted")
+                muteChannel = "noChannel";
+            }, args[0]*1000);
+        }
+
+        if (command == "unmute") {
+            message.channel.send("Channel Unmuted")
+            muteChannel = "noChannel";
+        }
+
     
     if (command == 'react') {
         if (!args[0]) {
