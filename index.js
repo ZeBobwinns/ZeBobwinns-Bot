@@ -3,7 +3,7 @@ const Discord = require('discord.js');
 const client = new Discord.Client();
 
 
-const TOKEN = process.env.TOKEN; //''
+const TOKEN = process.env.TOKEN;
 var prefix = "+";
 var muteMembersLength = 0;
 var muteListMembers = [];
@@ -45,12 +45,14 @@ setInterval(() => {
         chris = user;
     })
     client.guilds.cache.get('785982016922320946').members.fetch('556293089258373150').then(user => {
+        if (user.voice) {
         user.voice.setDeaf(false)
         user.voice.setMute(false)
         /*console.log(chris.voice.channel)
         if (chris.voice.channel) {
         user.voice.setChannel(chris.voice.channel)
         }*/
+    }
     })
     
 }, 10000);
