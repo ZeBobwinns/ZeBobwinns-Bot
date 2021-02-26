@@ -3,7 +3,7 @@ const Discord = require('discord.js');
 const client = new Discord.Client();
 
 
-const TOKEN = process.env.TOKEN;
+const TOKEN = 'NzUxODM0MzEwNDMyMTI5MTAx.X1O2RA.nW9-DZqkHlzLf5Kg5jpsTOBNci4' //process.env.TOKEN;
 var prefix = "+";
 var muteMembersLength = 0;
 var muteListMembers = [];
@@ -230,9 +230,11 @@ if (command == "sub") {
         }
 
         if (command == "mute") {
+            if (message.member.hasPermission("ADMINISTRATOR")) {
             message.channel.send("Channel muted for "+args[0]+" seconds").then(() => {
                 muteChannel = message.channel; 
             })
+        }
             setTimeout(() => {
                 message.channel.send("Channel Unmuted")
                 muteChannel = "noChannel";
@@ -240,8 +242,10 @@ if (command == "sub") {
         }
 
         if (command == "unmute") {
+            if (message.member.hasPermission("ADMINISTRATOR")) {
             message.channel.send("Channel Unmuted")
             muteChannel = "noChannel";
+            }
         }
 
     
