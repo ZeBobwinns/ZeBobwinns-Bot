@@ -234,11 +234,11 @@ if (command == "sub") {
             message.channel.send("Channel muted for "+args[0]+" seconds").then(() => {
                 muteChannel = message.channel; 
             })
-        }
             setTimeout(() => {
                 message.channel.send("Channel Unmuted")
                 muteChannel = "noChannel";
             }, args[0]*1000);
+        }
         }
 
         if (command == "unmute") {
