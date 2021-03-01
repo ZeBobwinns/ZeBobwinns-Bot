@@ -441,6 +441,45 @@ muteListMembers = [];
 }
 }
 
+    if (command == "define") {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+
+
+            if (this.readyState == 4 && this.status == 200) {
+
+                clearTimeout(defineTimeout);
+          var wordArr = JSON.parse(this.responseText);
+
+          var embed = {
+            color: 0xffffff,
+            title: wordArr[0].word,
+            fields: [
+                {
+                    name: 'Definition',
+                    value: wordArr[0].meanings[0].partOfSpeech + "; " + wordArr[0].meanings[0].definitions[0].definition,
+                },
+                {
+                    name: 'Synonyms',
+                    value: wordArr[0].meanings[0].definitions[0].synonyms,
+                },
+                {
+                    name: 'Phonetics',
+                    value: wordArr[0].phonetics[0].text + "\n" + wordArr[0].phonetics[0].audio,
+                },
+            ],
+        };
+        
+        message.channel.send({ embed: embed });
+            }
+        };
+        xhttp.open("GET", "https://api.dictionaryapi.dev/api/v2/entries/en_US/" + args[0], true);
+        xhttp.send();
+        var defineTimeout = setTimeout(() => {
+            message.channel.send("That ain't a word in my dictionary.")
+        }, 1000);
+    }
+
 
         if (command == "mutenext") {
             if (activeUnmmute > muteMembersLength - 2) {
