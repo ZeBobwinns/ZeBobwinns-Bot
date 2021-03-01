@@ -477,7 +477,7 @@ muteListMembers = [];
         xhttp.send();
         var defineTimeout = setTimeout(() => {
             message.channel.send("That ain't a word in my dictionary.")
-        }, 1000);
+        }, 3000);
     }
 
 
