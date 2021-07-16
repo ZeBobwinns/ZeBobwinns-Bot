@@ -3,7 +3,7 @@ const Discord = require('discord.js');
 const client = new Discord.Client();
 
 
-const TOKEN = process.env.TOKEN;
+const TOKEN = process.env.TOKEN; //process.env.TOKEN;
 var prefix = "+";
 var muteMembersLength = 0;
 var muteListMembers = [];
@@ -29,6 +29,23 @@ client.on('guildMemberAdd', async newMember => {
         }]
      });
 })
+
+
+//https://github.com/ZeBobwinns/ZeBobwinns-Bot/blob/master/happy%20zac%20noises.mp3?raw=true
+
+client.on('message', message => {
+    if (message.content == "*happy zac noises*" || message.content == "*happiness noises*" || message.content == "happy zac noises" || message.content == "happiness noises") {
+        message.channel.send("happy zac?");
+        message.channel.send({
+            files: [{
+               attachment: "https://cdn.discordapp.com/attachments/779163670655270915/865406447159476224/happy_zac_noises.mp3",
+               name: "Happy Zac Noises.mp3"
+            }]
+         });
+    }
+}
+)
+
 
 sendReminder();
 function sendReminder() {
