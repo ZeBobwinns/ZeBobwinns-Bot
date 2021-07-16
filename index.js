@@ -44,7 +44,7 @@ client.on('message', message => {
          });
     }
     if (message.content == "*sad zac noises*" || message.content == "*sadness noises*" || message.content == "sad zac noises" || message.content == "sadness noises") {
-        message.channel.send("happy zac?");
+        message.channel.send("sad zac?");
         message.channel.send({
             files: [{
                attachment: "https://cdn.discordapp.com/attachments/779163670655270915/865409594238042202/sad_zac_noises.mp3",
