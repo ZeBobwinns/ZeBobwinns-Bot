@@ -43,10 +43,6 @@ client.on('message', message => {
             }]
          });
     }
-}
-)
-
-client.on('message', message => {
     if (message.content == "*sad zac noises*" || message.content == "*sadness noises*" || message.content == "sad zac noises" || message.content == "sadness noises") {
         message.channel.send("happy zac?");
         message.channel.send({
@@ -58,6 +54,7 @@ client.on('message', message => {
     }
 }
 )
+
 
 
 sendReminder();
