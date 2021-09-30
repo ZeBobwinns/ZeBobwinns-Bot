@@ -1,9 +1,10 @@
 
 const Discord = require('discord.js');
 const client = new Discord.Client();
+const ytdl = require('ytdl-core');
+require('ffmpeg');
 
-
-const TOKEN = process.env.TOKEN; //process.env.TOKEN;
+const TOKEN = process.env.TOKEN;
 var prefix = "+";
 var muteMembersLength = 0;
 var muteListMembers = [];
@@ -241,6 +242,11 @@ if (command == "sub") {
         console.log("https://www.reddit.com/"+response[0].data.children[0].data.subreddit_name_prefixed);
       }
 }
+}
+
+if (command == "play") {
+playSong(message, args[0])
+    
 }
 
     if (command == "timer") {
@@ -523,7 +529,7 @@ muteListMembers = [];
         }
 
 
-        if (command == "next") {
+        if (command == "nextper") {
             if (muteMembersLength !== 0) {
             if (activeUnmmute > muteMembersLength - 2) {
                 activeUnmmute = 0;
@@ -553,6 +559,42 @@ muteListMembers = [];
             }
 }
 
+async function playSong(message, song) {
+    var songInfo = await ytdl.getInfo(song);
+    console.log(songInfo);
+    var embed = {
+        color: 0xffffff,
+        title: "Song Info",
+        fields: [
+            {
+                name: 'Title',
+                value: songInfo.videoDetails.title
+            },
+            {
+                name: 'Author',
+                value: songInfo.videoDetails.author.name
+            },
+            {
+                name: 'View Count',
+                value: songInfo.videoDetails.viewCount,
+            },
+            {
+                name: 'URL',
+                value: songInfo.videoDetails.video_url,
+            },
+            {
+                name: 'Likes',
+                value: songInfo.videoDetails.likes + " Likes, and " + songInfo.videoDetails.dislikes + " Dislikes",
+            },
+        ],
+    };
+    message.channel.send({ embed: embed });
+    message.member.voice.channel.join().then((connection) => 
+        {
+            connection.play(ytdl(songInfo.videoDetails.video_url))
+    }
+    )
+}
 
 function getUserFromMention(mention) {
 	if (!mention) return;
