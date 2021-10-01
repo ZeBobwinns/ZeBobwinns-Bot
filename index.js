@@ -2,9 +2,11 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
 const ytdl = require('ytdl-core');
+const {google} = require("googleapis")
 require('ffmpeg');
 
-const TOKEN = process.env.TOKEN;
+
+const TOKEN = "NzUxODM0MzEwNDMyMTI5MTAx.X1O2RA.nW9-DZqkHlzLf5Kg5jpsTOBNci4";//process.env.TOKEN;
 var prefix = "+";
 var muteMembersLength = 0;
 var muteListMembers = [];
@@ -245,7 +247,18 @@ if (command == "sub") {
 }
 
 if (command == "play") {
-playSong(message, args[0])
+var songQuery = args[0];
+var songID;
+if (songQuery.slice(0, 32) == "https://www.youtube.com/watch?v=") {
+    songID = songQuery.slice(32, 43);
+}
+else if (songQuery.slice(0, 17) == "https://youtu.be/") {
+    songID = songQuery.slice(17, 28);
+}
+else if (songQuery.length == 11){
+    songID = songQuery;
+}
+playSong(message, songID);
     
 }
 
@@ -334,6 +347,16 @@ playSong(message, args[0])
             message.channel.send("You're not in a voice channel, silly!")
         }
         }
+
+        if(command=="leavevoice" || command=="leave" ) {
+            if (message.member.voice.channel) {
+                var connection = message.member.voice.channel.leave();
+                message.channel.send("Left Voice!")
+            }
+            else{
+                message.channel.send("You're not in a voice channel, silly!")
+            }
+            }
 
     if (command == "makevote") {
         var voteingOn = args[0];
@@ -562,6 +585,10 @@ muteListMembers = [];
 async function playSong(message, song) {
     var songInfo = await ytdl.getInfo(song);
     console.log(songInfo);
+    if (songInfo.videoDetails.age_restricted == true) {
+        message.channel.send("That video seems to be age restricted, sorry I cant play those ):");
+        return;
+    }
     var embed = {
         color: 0xffffff,
         title: "Song Info",
@@ -634,6 +661,8 @@ function getUserNamesFromList(list) {
     }
     return returnString;
     }
+
+
 
 client.login(TOKEN);
 console.log(`Logged in as `+TOKEN)
