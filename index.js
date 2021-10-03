@@ -6,7 +6,7 @@ const {google} = require("googleapis")
 require('ffmpeg');
 
 
-const TOKEN = "NzUxODM0MzEwNDMyMTI5MTAx.X1O2RA.nW9-DZqkHlzLf5Kg5jpsTOBNci4";//process.env.TOKEN;
+const TOKEN = process.env.TOKEN;
 var prefix = "+";
 var muteMembersLength = 0;
 var muteListMembers = [];
