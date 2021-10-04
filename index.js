@@ -4,9 +4,11 @@ const client = new Discord.Client();
 const ytdl = require('ytdl-core');
 const {google} = require("googleapis")
 require('ffmpeg');
+const YouTube = require("discord-youtube-api");
+const youtube = new YouTube("AIzaSyAtWqUCvBrJpFCgnDa2uwGsZopVt_a9bAU");
 
 
-const TOKEN = process.env.TOKEN;
+const TOKEN = "NzUxODM0MzEwNDMyMTI5MTAx.X1O2RA.nW9-DZqkHlzLf5Kg5jpsTOBNci4";//process.env.TOKEN;
 var prefix = "+";
 var muteMembersLength = 0;
 var muteListMembers = [];
@@ -20,10 +22,11 @@ var XMLHttpRequest = require('xhr2');
 var reminder = [];
 var remindTimes = 0;
 var muteChannel = "noChannel";
+var songQueue = [];
+var songTimeout;
 
 // This is the needed event to use the welcome!
 client.on('guildMemberAdd', async newMember => {
-    // IMPORTANT NOTE: Make Sure To Use async and rename bot to client or whatever name you have for your bot events!
     const welcomeChannel = newMember.guild.channels.cache.find(channel => channel.name === 'general')
     welcomeChannel.send({
         files: [{
@@ -246,20 +249,40 @@ if (command == "sub") {
 }
 }
 
-if (command == "play") {
-var songQuery = args[0];
-var songID;
-if (songQuery.slice(0, 32) == "https://www.youtube.com/watch?v=") {
-    songID = songQuery.slice(32, 43);
+if (command == "play" || command == "p") {
+    var songQuery = collateArray(args);
+    if (songQueue.length <= 0) {
+        songQueue.push(songQuery);
+        console.log(songQueue);
+        handleVideoQuery(message, songQuery);
 }
-else if (songQuery.slice(0, 17) == "https://youtu.be/") {
-    songID = songQuery.slice(17, 28);
+    else {
+        songQueue.push(songQuery);
+        console.log(songQueue);
+    }
+
 }
-else if (songQuery.length == 11){
-    songID = songQuery;
+
+if (command == "queue" || command == "q") {
+    sendQueueToChannel(message);
 }
-playSong(message, songID);
-    
+
+if (command == "skip" || command == "s") {
+    if (songQueue.length > 1) {
+    clearTimeout(songTimeout);
+    message.channel.send("Song is over.");
+    songQueue.shift;
+    console.log(songQueue);
+    nextSong(message);
+    }
+    else if (songQueue.length == 1) {
+        songQueue = [];
+        message.guild.voice.channel.leave();
+        message.channel.send("You've run out of songs in your queue, imma head out.")
+    }
+    else {
+        message.channel.send("You have no songs in the queue.");
+    }
 }
 
     if (command == "timer") {
@@ -582,13 +605,35 @@ muteListMembers = [];
             }
 }
 
-async function playSong(message, song) {
-    var songInfo = await ytdl.getInfo(song);
-    console.log(songInfo);
-    if (songInfo.videoDetails.age_restricted == true) {
-        message.channel.send("That video seems to be age restricted, sorry I cant play those ):");
-        return;
+async function handleVideoQuery(message, query) {
+    var songQuery = query;
+    var songID;
+    if (songQuery.slice(0, 32) == "https://www.youtube.com/watch?v=") {
+        songID = songQuery.slice(32, 43);
     }
+    else if (songQuery.slice(0, 17) == "https://youtu.be/") {
+        songID = songQuery.slice(17, 28);
+    }
+    else {
+        songID = await searchForVideo(songQuery);
+    }   
+        playSong(message, songID);
+}
+
+async function playSong(message, song) {
+    try {
+        var songInfo = await ytdl.getInfo(song);
+    }
+    catch (error) {
+        console.log(error);
+        if (error.statusCode == 410) {
+            message.channel.send("Your video is classified as age-restricted, unfortanately, I cannot play these videos ):")
+            return
+        }
+        message.channel.send("Your video returned an error.  This could be because it is unplayable by YTDL, or I fucked up in my code, in either case, try a different video cause Im not getting around to fixing it.")
+        return
+    }
+    
     var embed = {
         color: 0xffffff,
         title: "Song Info",
@@ -618,9 +663,55 @@ async function playSong(message, song) {
     message.channel.send({ embed: embed });
     message.member.voice.channel.join().then((connection) => 
         {
-            connection.play(ytdl(songInfo.videoDetails.video_url))
+            connection.play(ytdl(songInfo.videoDetails.video_url));
+                songTimeout = setTimeout(() => {
+                    nextSong(message);
+
+                    if (songQueue.length == 0) {
+                            songQueue.shift;
+                            message.guild.voice.channel.leave();
+                            message.channel.send("You've run out of songs in your queue, imma head out.")
+                        }
+            },  songInfo.videoDetails.lengthSeconds * 1000);
     }
     )
+}
+
+async function sendQueueToChannel(message) {
+    message.channel.send(songQueue.toString());
+
+    var queueEmbed = new Discord.MessageEmbed();
+    queueEmbed.setTitle("Queue");
+    for (var i = 0; i > songQueue.length; i++ ) {
+        if (songQueue[i].slice(0, 32) == "https://www.youtube.com/watch?v=") {
+            var songInfo = await ytdl.getInfo(songQueue[i].slice(32, 43));
+            var songTitle = songInfo.videoDetails.title;
+        }
+        else if (songQueue[i].slice(0, 17) == "https://youtu.be/") {
+            var songInfo = await ytdl.getInfo(songQueue[i].slice(17, 28));
+            var songTitle = songInfo.videoDetails.title;
+        }
+        else {
+            var songTitle = await youtube.searchVideos(songQueue[i]).title;
+        }   
+        console.log(songTitle);
+        queueEmbed.addField(i, songTitle);
+    }
+    message.channel.send({embed: queueEmbed});
+}
+
+async function searchForVideo(query) {
+    var searchResult = await youtube.searchVideos(query);
+    return searchResult.id;
+}
+
+function nextSong(message) {
+    console.log(songQueue)
+    songQueue.shift();
+    var nextSong = songQueue[0];
+    console.log(nextSong)
+    console.log(songQueue);
+    handleVideoQuery(message, nextSong);
 }
 
 function getUserFromMention(mention) {
@@ -663,6 +754,19 @@ function getUserNamesFromList(list) {
     }
 
 
+function collateArray(args) {
+    var collatedArray; 
+    for (i=0; i < args.length ; i++) {
+        if (i == 0) {
+            collatedArray = args[i]
+        }
+        else {
+            collatedArray = collatedArray + " " + args[i];
+        }
+    }
+    console.log(collatedArray);
+    return collatedArray
+}
 
 client.login(TOKEN);
 console.log(`Logged in as `+TOKEN)
