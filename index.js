@@ -8,7 +8,7 @@ const YouTube = require("discord-youtube-api");
 const youtube = new YouTube("AIzaSyAtWqUCvBrJpFCgnDa2uwGsZopVt_a9bAU");
 
 
-const TOKEN = "NzUxODM0MzEwNDMyMTI5MTAx.X1O2RA.nW9-DZqkHlzLf5Kg5jpsTOBNci4";//process.env.TOKEN;
+const TOKEN = process.env.TOKEN;
 var prefix = "+";
 var muteMembersLength = 0;
 var muteListMembers = [];
