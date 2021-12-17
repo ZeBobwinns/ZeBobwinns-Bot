@@ -1,4 +1,3 @@
-
 const Discord = require('discord.js');
 const client = new Discord.Client();
 const ytdl = require('ytdl-core');
@@ -238,6 +237,19 @@ if (command == "post") {
 
 if (command == "sub") {
     var xhttp = new XMLHttpRequest();
+    if (randomNum(1,20) == 13) {
+        xhttp.open("GET", "https://www.reddit.com/r/randnsfw.json", true);
+        xhttp.send();
+        xhttp.onload = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            var response = JSON.parse(this.responseText);
+            message.channel.send("https://www.reddit.com/"+response.data.children[0].data.subreddit_name_prefixed+" (!!NSFW!!)");
+            console.log("https://www.reddit.com/"+response.data.children[0].data.subreddit_name_prefixed);
+          }
+    }
+    console.log("Getting NSFW")
+    }
+    else {
     xhttp.open("GET", "https://www.reddit.com/r/random/random.json", true);
     xhttp.send();
     xhttp.onload = function() {
@@ -246,6 +258,7 @@ if (command == "sub") {
         message.channel.send("https://www.reddit.com/"+response[0].data.children[0].data.subreddit_name_prefixed);
         console.log("https://www.reddit.com/"+response[0].data.children[0].data.subreddit_name_prefixed);
       }
+}
 }
 }
 
@@ -766,6 +779,10 @@ function collateArray(args) {
     }
     console.log(collatedArray);
     return collatedArray
+}
+
+function randomNum(min, max) {
+	return Math.floor(Math.random() * (max - min)) + min; // You can remove the Math.floor if you don't want it to be an integer
 }
 
 client.login(TOKEN);
