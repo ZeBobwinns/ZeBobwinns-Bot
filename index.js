@@ -7,7 +7,7 @@ const YouTube = require("discord-youtube-api");
 const youtube = new YouTube("AIzaSyAtWqUCvBrJpFCgnDa2uwGsZopVt_a9bAU");
 
 
-const TOKEN = process.env.TOKEN;
+const TOKEN = "NzUxODM0MzEwNDMyMTI5MTAx.X1O2RA.znJ7lHUx1M51QtXTk4A07N4w9ZA"//process.env.TOKEN;
 var prefix = "+";
 var muteMembersLength = 0;
 var muteListMembers = [];
@@ -24,6 +24,41 @@ var muteChannel = "noChannel";
 var songQueue = [];
 var songTimeout;
 
+/*
+// initilize phone call thing
+const { RelayConsumer } = require('@signalwire/node')
+
+const consumer = new RelayConsumer({
+  project: '694cea07-a3ac-4b27-912a-8fd43c95e9d9',
+  token: 'PT013a86a967bb14a9e4438dcb96301ac0c11e7499affb2985',
+  contexts: ['discordCall'],
+  onIncomingCall: async (call) => {
+    const { successful } = await call.answer()
+    if (!successful) {
+      console.error('Answer Error')
+      return
+    }
+
+    const collect = {
+      type: 'digits',
+      digits_max: 18,
+      digits_min: 18,
+      text: 'Welcome to Zacs discord bot! Please, enter voice channel ID'
+    }
+    const prompt = await call.promptTTS(collect)
+    if (prompt.successful) {
+      await call.playTTS({ text: `You entered: ${prompt.result}. Entering Call.` })
+      client.channels.cache.get(prompt.result).join().then((connection) => 
+        {
+            connection.play(call.remoteStream);
+        });
+    }
+  }
+})
+
+
+consumer.run()
+*/
 // This is the needed event to use the welcome!
 client.on('guildMemberAdd', async newMember => {
     const welcomeChannel = newMember.guild.channels.cache.find(channel => channel.name === 'general')
@@ -298,6 +333,37 @@ if (command == "skip" || command == "s") {
     }
 }
 
+
+/*
+if (command == "testthing") {
+    var voice, player;
+
+// To join channel and play
+async function main() {
+    const yourTask = new Task('694cea07-a3ac-4b27-912a-8fd43c95e9d9', 'PT013a86a967bb14a9e4438dcb96301ac0c11e7499affb2985')
+    const context = 'discordCall'
+    const data = {
+      uuid: 'Call',
+      data: ''
+    }
+    try {
+      await yourTask.deliver(context, data)
+      console.log("task?")
+    } catch (error) {
+      console.log('Error creating task!', error)
+    }
+  }
+  
+  main().catch(console.error)
+
+// To stop
+setTimeout(() => {
+    player.end();
+    message.member.voice.channel.leave();
+}, 30000);
+}
+*/
+
     if (command == "timer") {
         var time = args[0];
         message.channel.send(time).then(sentMessage =>  setInterval(() => {
@@ -366,7 +432,14 @@ if (command == "skip" || command == "s") {
     if(command == "ping") {
         var pingee = args[0];
         var pingAmt = args[1];
-        sendPingMessage(pingee, pingAmt, message.channel)
+        var pingMessage;
+        if (args[2]) {
+            args.splice(0, 1);
+            args.splice(0, 1);
+            pingMessage = ", "+collateArray(args);
+        }
+        else {pingMessage = ", get TF in here!"}
+        sendPingMessage(pingee, pingAmt, message.channel, pingMessage)
     }
 
     if(command == "cancelping") {
@@ -742,13 +815,13 @@ function getUserFromMention(mention) {
 }
 
 
-function sendPingMessage(recipent, times, channel) {
+function sendPingMessage(recipent, times, channel, message) {
     if(pingLoopNum < times) {
-        channel.send("Hey, "+recipent.toString()+" get TF in here!");
+        channel.send("Hey, "+recipent.toString()+message);
         pingLoopNum++;
         pingTimeout = setTimeout(() => {
-            sendPingMessage(recipent, times, channel);
-        }, 2500, recipent, times, channel);
+            sendPingMessage(recipent, times, channel, message);
+        }, 2500, recipent, times, channel, message);
     }
     else{
         pingLoopNum=0;
