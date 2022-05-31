@@ -7,7 +7,7 @@ const YouTube = require("discord-youtube-api");
 const youtube = new YouTube("AIzaSyAtWqUCvBrJpFCgnDa2uwGsZopVt_a9bAU");
 
 
-const TOKEN = "NzUxODM0MzEwNDMyMTI5MTAx.X1O2RA.znJ7lHUx1M51QtXTk4A07N4w9ZA"//process.env.TOKEN;
+const TOKEN = "NzUxODM0MzEwNDMyMTI5MTAx.X1O2RA.7DGbCpsfs2QVhUWE_j1bedvZZo"//process.env.TOKEN;
 var prefix = "+";
 var muteMembersLength = 0;
 var muteListMembers = [];
@@ -23,6 +23,7 @@ var remindTimes = 0;
 var muteChannel = "noChannel";
 var songQueue = [];
 var songTimeout;
+var bitchList = [];
 
 /*
 // initilize phone call thing
@@ -89,6 +90,17 @@ client.on('message', message => {
             files: [{
                attachment: "https://cdn.discordapp.com/attachments/779163670655270915/865409594238042202/sad_zac_noises.mp3",
                name: "Sad Zac Noises.mp3"
+            }]
+         });
+    }
+
+    const isOnList = (element) => element == message.author.id;
+    if (bitchList.some(isOnList)) {
+        console.log(message.author.id);
+        message.channel.send({
+            files: [{
+               attachment: "https://cdn.discordapp.com/attachments/901121741663899679/980885384856764436/unknown.png",
+               name: "Bitch.png"
             }]
          });
     }
@@ -473,6 +485,32 @@ setTimeout(() => {
         message.react(":white_check_mark:")
     }
 
+    if (command == "bitch") {
+        var bitchMention = args[0];
+        var bitchID = getUserFromMention(bitchMention);
+        if (bitchList.indexOf(bitchID) == -1) {
+        if (args[0]) {
+            bitchList.push(bitchID);
+        }
+        else {
+            message.channel.send("I need a person to bitchify!")
+        }
+        message.channel.send("<@"+bitchID+"> is now a bitch!")
+    } else {
+        console.log(message.author.id)
+        console.log(bitchID.id)
+        if (message.author.id !== bitchID.id) {
+        bitchList.forEach(element => {
+            if (element == bitchID) {
+                bitchList.splice(bitchList.indexOf(bitchID),1)
+            }
+            message.channel.send("<@"+bitchID+"> is no longer a bitch!")
+        });
+    } else {
+        message.channel.send("You can't unbitch yourself, ya fuckin bitch!");
+    }
+    }
+    }
 
         }
 });
