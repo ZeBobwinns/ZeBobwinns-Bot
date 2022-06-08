@@ -488,14 +488,18 @@ setTimeout(() => {
     if (command == "bitch") {
         var bitchMention = args[0];
         var bitchID = getUserFromMention(bitchMention);
-        if (bitchList.indexOf(bitchID) == -1) {
-        if (args[0]) {
+        if (bitchList.indexOf(bitchID) == -1 && args[0]) {
+            if (bitchID.bot == false) {
             bitchList.push(bitchID);
+            message.channel.send("<@"+bitchID+"> is now a bitch!")
+            }
+            else {
+                message.channel.send("I can't bitchify bots!")
+            }
         }
         else {
             message.channel.send("I need a person to bitchify!")
         }
-        message.channel.send("<@"+bitchID+"> is now a bitch!")
     } else {
         console.log(message.author.id)
         console.log(bitchID.id)
@@ -512,7 +516,6 @@ setTimeout(() => {
     }
     }
 
-        }
 });
 
 
