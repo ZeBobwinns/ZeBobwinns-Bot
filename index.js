@@ -11,7 +11,7 @@ const deepai = require('deepai'); // OR include deepai.min.js as a script tag in
 deepai.setApiKey('e0d38638-19dd-47a6-b8af-10fb573be51b');
 
 
-const TOKEN = "NzUxODM0MzEwNDMyMTI5MTAx.GClAQi.0zkTGUOm1UPEDDbkaxbjoaBVzjCSJ562hwWCpw"//process.env.TOKEN;
+const TOKEN = process.env.TOKEN;
 var prefix = "+";
 var muteMembersLength = 0;
 var muteListMembers = [];
