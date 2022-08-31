@@ -6,8 +6,12 @@ require('ffmpeg');
 const YouTube = require("discord-youtube-api");
 const youtube = new YouTube("AIzaSyAtWqUCvBrJpFCgnDa2uwGsZopVt_a9bAU");
 
+const deepai = require('deepai'); // OR include deepai.min.js as a script tag in your HTML
 
-const TOKEN = "NzUxODM0MzEwNDMyMTI5MTAx.X1O2RA.7DGbCpsfs2QVhUWE_j1bedvZZo"//process.env.TOKEN;
+deepai.setApiKey('e0d38638-19dd-47a6-b8af-10fb573be51b');
+
+
+const TOKEN = "NzUxODM0MzEwNDMyMTI5MTAx.X1O2RA.7DGbCpsfs2QVhUWE_j1bedvZZoQ"//process.env.TOKEN;
 var prefix = "+";
 var muteMembersLength = 0;
 var muteListMembers = [];
@@ -343,6 +347,19 @@ if (command == "skip" || command == "s") {
     else {
         message.channel.send("You have no songs in the queue.");
     }
+}
+
+
+if (command == "makeimage" || command == "image" || command == "i") {
+    message.channel.send("Hold on a sec... makin these pictures takes a while...")
+    var request = collateArray(args);
+    (async function() {
+        var resp = await deepai.callStandardApi("text2img", {
+                text: request,
+        });
+        message.channel.send(resp.output_url)
+    })()
+    
 }
 
 
