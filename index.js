@@ -716,6 +716,21 @@ muteListMembers = [];
     }
 
 
+    //https://evilinsult.com/generate_insult.php
+
+    if (command == "insult" || command == "in" || command == "fuckyou" || command == "fuck" ) {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+
+            if (this.readyState == 4 && this.status == 200) {
+                var insult = this.responseText;
+                message.channel.send(insult);
+            }}
+
+        xhttp.open("GET", "https://evilinsult.com/generate_insult.php" , true);
+        xhttp.send();
+    }
+
         if (command == "mutenext") {
             if (activeUnmmute > muteMembersLength - 2) {
                 activeUnmmute = 0;
