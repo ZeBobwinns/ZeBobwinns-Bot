@@ -214,6 +214,20 @@ console.log(args);
         message.channel.send({ embed: embed });
     }
 
+    if (command == "nuke") {
+            message.guild.channels.create(message.channel.name, {
+                type: 'GUILD_TEXT',
+                parent_id: message.channel.parentID,
+                permissionOverwrites: [{
+                    id: message.guild.id,
+                    allow: ['VIEW_CHANNEL'],
+                    deny: ['SEND_MESSAGES'],
+                }]
+            })
+            message.channel.delete();
+        }
+        
+
     if (command == "remind") {
         var millisecs = args[1]*1000
         reminder = args[0];
